@@ -18,8 +18,8 @@ RF24 radio(CE_PIN, CSN_PIN); // Create a Radio
 int sendtest = 6; // pinos de testes
 int sendign = 3;
 
-const int ignitorpin = 5;
-const int testpin = 9;// the number of the pushbutton pin
+const int ignitorpin = 6;
+const int testpin = 7;// pushbutton pin
 
 unsigned long currentMillis;
 unsigned long prevMillis;
@@ -39,8 +39,8 @@ void setup() {
     Serial.print("Transmitter ready");
     radio.begin();
     radio.setDataRate( RF24_250KBPS );
-    radio.setRetries(3,5); // delay, count
-    radio.openWritingPipe(slaveAddress);
+    radio.setRetries(3,5); // delay, count        
+    radio.openWritingPipe(slaveAddress);         
     delay(1000);
     digitalWrite(3, LOW);
     digitalWrite(6, LOW);
@@ -74,7 +74,7 @@ void ignition() { //send ignition command
     char dataToSend[2] = "I";
     digitalWrite(3, LOW);
     bool rslt;
-    rslt = radio.write( &dataToSend, sizeof(dataToSend) );
+    rslt = radio.write( &dataToSend, sizeof(dataToSend) );       
     Serial.print("Sending ignition signal, ");
     
     if (rslt) {

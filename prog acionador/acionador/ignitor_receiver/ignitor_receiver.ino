@@ -15,7 +15,10 @@ RF24 radio(CE_PIN, CSN_PIN);
 
 char dataReceived[10]; // this must match dataToSend in the TX
 bool newData = false;
-int relaypin = 8;
+int relaypin = 3;
+int led1 = 4;
+int led2 = 5;
+int k = 0;
 
 bool launch = true;
 unsigned long lauchtime;
@@ -24,8 +27,11 @@ unsigned long lauchtime;
 void setup() {
   Serial.begin(9600);
   pinMode (relaypin,OUTPUT);
+  pinMode (led1,OUTPUT);
+  pinMode (led2,OUTPUT);
   digitalWrite(relaypin, LOW);
   Serial.println("Receiver ready");
+  digitalWrite(led1, HIGH);            // LED que indica que o receptor está pronto
   radio.begin();
   radio.setDataRate( RF24_250KBPS );
   radio.openReadingPipe(1, thisSlaveAddress);
@@ -68,9 +74,11 @@ void protocol() {
 void ignition() {
   Serial.println("Igniting");
     digitalWrite(relaypin, HIGH);
+
+    while(k < 10){
+      digitalWrite(led2, HIGH);          // acionando ignitor
+      digitalWrite(led2, LOW); 
+      delay(300);
+      k++;
+  }
 }
-
-
-
-
-
