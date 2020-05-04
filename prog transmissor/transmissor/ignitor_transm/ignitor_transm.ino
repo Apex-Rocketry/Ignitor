@@ -18,6 +18,10 @@ RF24 radio(CE_PIN, CSN_PIN); // Create a Radio
 int sendtest = 6; // pinos de testes
 int sendign = 3;
 
+int led1 = 3;
+int led2 = 4;
+int led3 = 5;
+
 const int ignitorpin = 6;
 const int testpin = 7;// pushbutton pin
 
@@ -33,11 +37,15 @@ int teststate = LOW;
 void setup() {
     digitalWrite(3, HIGH); // leds
     pinMode(6, OUTPUT);
+    pinMode(led1, OUTPUT);
+    pinMode(led2, OUTPUT);
+    pinMode(led3, OUTPUT);
     pinMode(3, OUTPUT);
     digitalWrite(6, HIGH);
     Serial.begin(9600);
     Serial.print("Transmitter ready");
     radio.begin();
+    digitalWrite(led1, HIGH);    // Led que indica que o transmissor está ligado
     radio.setDataRate( RF24_250KBPS );
     radio.setRetries(3,5); // delay, count        
     radio.openWritingPipe(slaveAddress);         
