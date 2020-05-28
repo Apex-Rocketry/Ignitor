@@ -13,17 +13,12 @@ const byte slaveAddress[5] = {'R','x','A','A','A'};
 
 RF24 radio(CE_PIN, CSN_PIN); // Create a Radio
 
-
-
-int sendtest = 6; // pinos de testes
-int sendign = 3;
-
 int led1 = 3;
 int led2 = 4;
 int led3 = 5;
 
-const int ignitorpin = 6;
-const int testpin = 7;// pushbutton pin
+const int ignitorpin = 6;// botão para iniciar ignição
+const int testpin = 7;// botão para iniciar teste
 
 unsigned long currentMillis;
 unsigned long prevMillis;
@@ -35,24 +30,20 @@ unsigned long intervalcancel = 3000;
 int ignitorstate = LOW ;
 int teststate = LOW;
 void setup() {
-    digitalWrite(3, HIGH); // leds
-    pinMode(6, OUTPUT);
     pinMode(led1, OUTPUT);
     pinMode(led2, OUTPUT);
     pinMode(led3, OUTPUT);
-    pinMode(3, OUTPUT);
-    digitalWrite(6, HIGH);
+    pinMode(ignitorpin, INPUT);
+    pinMode(testpin, INPUT);
+    
     Serial.begin(9600);
-    Serial.print("Transmitter ready");
+    Serial.println("Transmitter ready");
     radio.begin();
     digitalWrite(led1, HIGH);    // Led que indica que o transmissor está ligado
     radio.setDataRate( RF24_250KBPS );
     radio.setRetries(3,5); // delay, count        
     radio.openWritingPipe(slaveAddress);         
     delay(1000);
-    digitalWrite(3, LOW);
-    digitalWrite(6, LOW);
-
     
 }
 
@@ -80,17 +71,17 @@ void loop() {
 
 void ignition() { //send ignition command
     char dataToSend[2] = "I";
-    digitalWrite(3, LOW);
+    digitalWrite(led2, LOW);
     bool rslt;
     rslt = radio.write( &dataToSend, sizeof(dataToSend) );       
-    Serial.print("Sending ignition signal, ");
+    Serial.println("Sending ignition signal...");
     
     if (rslt) {
          Serial.println("ignition activated");
          prevMillisignition = millis();
-         digitalWrite(3, HIGH);
+         digitalWrite(led2, HIGH);
          delay(5000);
-         digitalWrite(3, LOW);
+         digitalWrite(led2, LOW);
     }
     else {
         Serial.println("ignition failed, signal not received by igniter");
@@ -103,17 +94,16 @@ void testignition() { // send test communuication command
     Serial.println(dataToSend);
     bool teste;
     teste = radio.write( &dataToSend, sizeof(dataToSend) );
-    Serial.print("Sending test signal, ");
+    Serial.println("Sending test signal...");
      if (teste) {
          Serial.println("Test successful");
-          digitalWrite(6, HIGH);
-          delay(250);
+          digitalWrite(led3, HIGH);
+          delay(2000);
          prevMillisignition = millis();
-         digitalWrite(6, LOW);
+         digitalWrite(led3, LOW);
     }
     else {
         Serial.println("Test signal not received by igniter");
-         //digitalWrite(3, HIGH);
          delay(500);
     }
 }
