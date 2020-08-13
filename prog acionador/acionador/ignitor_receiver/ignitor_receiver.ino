@@ -76,7 +76,8 @@ void ignition() {
     digitalWrite(relaypin, HIGH);
 
     while(k < 10){
-      digitalWrite(led2, HIGH);          // acionando ignitor
+      digitalWrite(led2, HIGH); // acionando ignitor
+      delay(300);
       digitalWrite(led2, LOW); 
       delay(300);
       k++;
